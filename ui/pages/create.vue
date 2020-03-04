@@ -17,23 +17,25 @@ export default {
   },
   methods: {
     async getCompany (barcode) {
-      const params = {
-        headers: {
-          Authorization: `Bearer ${this.$auth.token}`
-        }
-      }
+      // const params = {
+      //   headers: {
+      //     Authorization: `Bearer ${this.$auth.token}`
+      //   }
+      // }
       barcode = encodeURIComponent(barcode.trim())
       if (!barcode) {
         return
       }
-      const endpoint = `${process.env.COMPANY_API_ENDPOINT}/grocery/${barcode}`
-      const resp = await this.$axios.get(endpoint, params)
-      this.company = JSON.stringify(resp.data, null, '  ')
+      // const endpoint = `${process.env.COMPANY_API_ENDPOINT}/grocery/${barcode}`
+      // const resp = await this.$axios.get(endpoint, params)
+      // this.company = JSON.stringify(resp.data, null, '  ')
 
       const net = `${process.env.META_API_ENDPOINT}/json/product/${barcode}`
+      const key = this.$auth.user[process.env.META_API_KEY]
+      console.log(key, this.$auth.user)
       const netR = await this.$axios.get(net, {
         headers: {
-          'x-thaubing-api-key': process.env.META_API_KEY
+          'x-thaubing-api-key': key
         }
       })
       console.log(netR)
