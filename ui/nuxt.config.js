@@ -1,7 +1,7 @@
 import 'dotenv/config'
 
 export default {
-  mode: 'sap',
+  mode: 'spa',
   /*
   ** Headers of the page
   */
@@ -31,7 +31,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/sentry'
+    '~/plugins/sentry',
+    '~/plugins/auth0'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -47,27 +48,13 @@ export default {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    '@nuxtjs/axios'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-  },
-  auth: {
-    redirect: {
-      login: '/', // redirect user when not connected
-      callback: '/auth/signed-in'
-    },
-    strategies: {
-      local: false,
-      auth0: {
-        domain: process.env.AUTH0_DOMAIN,
-        client_id: process.env.AUTH0_CLIENT_ID
-      }
-    }
   },
   /*
   ** Build configuration

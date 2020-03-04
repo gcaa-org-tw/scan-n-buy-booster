@@ -1,0 +1,27 @@
+{
+  "name": "scan-n-buy-booster-api",
+  "version": "1.0.0",
+  "description": "API for scan-n-buy-booster",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gcaa-org-tw/scan-n-buy-booster"
+  },
+  "author": "ddio@ddio.io",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
+    "express-jwt-authz": "^2.3.1",
+    "jwks-rsa": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}

@@ -13,7 +13,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@nuxtjs/auth": "^4.8.5",
+    "@auth0/auth0-spa-js": "^1.6.4",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
     "@sentry/browser": "^5.12.1",
