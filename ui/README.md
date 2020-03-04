@@ -4,7 +4,9 @@
 
 - Required:
   - `AUTH0_DOMAIN` & `AUTH0_CLIENT_ID`, for authentication
-  - `API_ENDPOINT`, endpoint to API server
+  - `COMPANY_API_ENDPOINT`, endpoint of barcode => company info API server
+  - `META_API_ENDPOINT`, endpoint of barcode => meta data API server
+  - `META_API_KEY`, key for meta API server
 - Optional:
   - `SENTRY_DSN`: Sentry DSN
 

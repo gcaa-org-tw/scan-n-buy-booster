@@ -48,13 +48,17 @@ export default {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+  },
+  proxy: {
+    '/json': 'https://thaubing.gcaa.org.tw'
   },
   /*
   ** Build configuration
