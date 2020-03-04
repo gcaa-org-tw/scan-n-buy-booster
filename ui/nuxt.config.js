@@ -1,5 +1,7 @@
+import 'dotenv/config'
+
 export default {
-  mode: 'universal',
+  mode: 'sap',
   /*
   ** Headers of the page
   */
@@ -45,13 +47,27 @@ export default {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+  },
+  auth: {
+    redirect: {
+      login: '/', // redirect user when not connected
+      callback: '/auth/signed-in'
+    },
+    strategies: {
+      local: false,
+      auth0: {
+        domain: process.env.AUTH0_DOMAIN,
+        client_id: process.env.AUTH0_CLIENT_ID
+      }
+    }
   },
   /*
   ** Build configuration
