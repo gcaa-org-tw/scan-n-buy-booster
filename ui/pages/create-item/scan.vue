@@ -9,10 +9,10 @@
         .scan__code-label 條碼：
         .scan__code-input
           .w-100(v-show="!isManual") {{barcode || '等待掃描中...'}}
-          input.bw0(
+          input.bw0.w-100(
             v-show="isManual"
             ref="input"
-            type="text"
+            type="number"
             v-model="barcode"
             placeholder="請輸入條碼"
           )
@@ -36,22 +36,24 @@
     div(v-else)
       h2.tc 找不到相機，請詢問工作人員 ⊙﹏⊙
     template(slot="tail")
-      button.green.ba.br2.bg-white.b--green.ph3.pv2.tc.w-100(
-        @click="nextPage"
+      step-button(
+        to="/create-item/confirm-company"
         :disabled="!barcode"
-        :class="{pointer: barcode, forbid: !barcode}"
+        :primary="true"
       ) 下一步
 </template>
 <script>
 import { BrowserBarcodeReader } from '@zxing/library/esm5'
 import { MUTATIONS } from '~/store'
 import VerticalStep from '~/components/VerticalStep'
+import StepButton from '~/components/StepButton'
 
 const DEFAULT_CAMERA_KEY = 'default_camera_session_key'
 
 export default {
   components: {
-    VerticalStep
+    VerticalStep,
+    StepButton
   },
   data () {
     return {
@@ -74,6 +76,9 @@ export default {
     targetCameraId (newId) {
       localStorage.setItem(DEFAULT_CAMERA_KEY, newId)
       this.startScanOnce()
+    },
+    barcode (newVal) {
+      this.$store.commit(MUTATIONS.SET_BARCODE, newVal.trim())
     }
   },
   async created () {
@@ -115,12 +120,6 @@ export default {
       this.$nextTick(() => {
         this.$refs.input.focus()
       })
-    },
-    nextPage () {
-      if (this.barcode) {
-        this.$store.commit(MUTATIONS.SET_BARCODE, this.barcode.trim())
-        this.$router.push('/create-item/confirm-company')
-      }
     },
     async startScanOnce () {
       if (!this.targetCameraId) {

@@ -5,6 +5,8 @@
 </template>
 <script>
 // TODO: console.error -> sentry
+// TODO: manually insert barcode if failed
+// TODO: manually insert company info if null
 export default {
 }
 </script>

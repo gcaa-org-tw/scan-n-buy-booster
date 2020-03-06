@@ -1,5 +1,6 @@
 const axios = require('axios')
 const qs = require('querystring')
+const Sentry = require('@sentry/node')
 
 const ENDPOINT = {
   GS1: 'https://www.gs1tw.org/twct/web/codesearch_send.jsp',
@@ -145,8 +146,15 @@ module.exports = async function (req, res) {
     return
   }
 
+  if (company.name !== companyName) {
+    Sentry.captureMessage(`Name collision on barcode ${barcode}, GS1 = ${companyName}, Ronny = ${company.name}`)
+  }
+
   res.json({
     success: true,
-    data: company
+    data: {
+      ...company,
+      rawName: companyName
+    }
   })
 }

@@ -9,7 +9,8 @@ export const MUTATIONS = {
 }
 
 const DEFAULT_STATE = {
-  barcode: '',
+  // barcode: '',
+  barcode: '00000',
   companyInfo: null,
   itemName: '',
   mainCat: '',
@@ -31,8 +32,9 @@ export const mutations = {
   [MUTATIONS.SET_COMPANY] (state, companyInfo) {
     if (companyInfo.id && companyInfo.name) {
       state.companyInfo = companyInfo
+    } else {
+      console.error('Invalid company info', companyInfo)
     }
-    console.error('Invalid company info')
   },
   [MUTATIONS.SET_NAME] (state, itemName) {
     state.itemName = itemName
