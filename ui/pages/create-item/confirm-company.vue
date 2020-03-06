@@ -30,7 +30,6 @@
             span.truncate(v-if="hasId") {{id}}
             .bb.b--green(v-else)
               input.w-100.bw0(v-model.trim="id" placeholder="請幫我輸入公司統編..")
-        div {{companyInfo}}
     .flex(slot="tail" v-if="!isExisted")
       .w-50.pr2
         step-button(
@@ -166,7 +165,7 @@ export default {
       }
       await this.crawlCompany()
       this.hasName = !!this.name
-      this.hasId = !!this.hasId
+      this.hasId = !!this.id
 
       this.isLoading = false
     }

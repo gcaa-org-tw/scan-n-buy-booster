@@ -4,35 +4,44 @@
       .gray 第 ➀ 步
       h1.f3.mt0 掃描產品條碼
     div(v-if="cameras.length || !hasNoCamera")
-      video.bg-moon-gray.w-100(ref="barcodeVideo" :class="{disabled: barcode}")
-      .pa2.mv2.bb.b--green.w-100.flex
-        .scan__code-label 條碼：
-        .scan__code-input
-          .w-100(v-show="!isManual") {{barcode || '等待掃描中...'}}
-          input.bw0.w-100(
-            v-show="isManual"
-            ref="input"
-            type="number"
-            v-model="barcode"
-            placeholder="請輸入條碼"
-          )
-      .flex
-        .w-50.pr2
-          select.h-100.w-100(
-            v-model="targetCameraId"
-            :disabled="onlyOnyCamera"
-            :class="{forbid: onlyOnyCamera}"
-          )
-            option(v-for="camera in cameras" :value="camera.id") {{camera.label}}
-        .w-50.pl2
-          button.ba.gold.bg-white.b--gold.pv2.ph3.w-100.br2.pointer(
-            v-show="isOnScan && !isManual"
-            @click="typeManually"
-          ) 手動輸入
-          button.ba.gold.bg-white.b--gold.pv2.ph3.w-100.br2.pointer(
-            @click="startScanOnce"
-            v-show="!isOnScan || isManual"
-          ) 重新掃描
+      div(v-if="noDefaultCamera")
+        .mb3.lh-copy
+          | 請幫我選一個鏡頭
+          .gray 別擔心，之後可以隨時更改
+        select(
+          v-model="targetCameraId"
+        )
+          option(v-for="camera in cameras" :value="camera.id") {{camera.label}}
+      div(v-else)
+        video.bg-moon-gray.w-100(ref="barcodeVideo" :class="{disabled: barcode}")
+        .pa2.mv2.bb.b--green.w-100.flex
+          .scan__code-label 條碼：
+          .scan__code-input
+            .w-100(v-show="!isManual") {{barcode || '等待掃描中...'}}
+            input.bw0.w-100(
+              v-show="isManual"
+              ref="input"
+              type="number"
+              v-model="barcode"
+              placeholder="請輸入條碼"
+            )
+        .flex
+          .w-50.pr2
+            select.h-100.w-100(
+              v-model="targetCameraId"
+              :disabled="onlyOnyCamera"
+              :class="{forbid: onlyOnyCamera}"
+            )
+              option(v-for="camera in cameras" :value="camera.id") {{camera.label}}
+          .w-50.pl2
+            button.ba.gold.bg-white.b--gold.pv2.ph3.w-100.br2.pointer(
+              v-show="isOnScan && !isManual"
+              @click="typeManually"
+            ) 手動輸入
+            button.ba.gold.bg-white.b--gold.pv2.ph3.w-100.br2.pointer(
+              @click="startScanOnce"
+              v-show="!isOnScan || isManual"
+            ) 重新掃描
     div(v-else)
       h2.tc 找不到相機，請詢問工作人員 ⊙﹏⊙
     template(slot="tail")
@@ -74,6 +83,7 @@ export default {
   },
   watch: {
     targetCameraId (newId) {
+      this.noDefaultCamera = false
       localStorage.setItem(DEFAULT_CAMERA_KEY, newId)
       this.startScanOnce()
     },

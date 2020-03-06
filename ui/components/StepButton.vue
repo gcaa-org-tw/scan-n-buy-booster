@@ -15,7 +15,7 @@ export default {
     },
     to: {
       type: String,
-      required: true
+      default: ''
     },
     primary: {
       type: Boolean,
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     handleClick () {
-      if (!this.disabled) {
+      if (!this.disabled && this.to) {
         this.$router.push(this.to)
       }
     }
