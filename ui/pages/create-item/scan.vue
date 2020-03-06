@@ -5,7 +5,17 @@
       h1.f3.mt0 掃描產品條碼
     div(v-if="cameras.length || !hasNoCamera")
       video.bg-moon-gray.w-100(ref="barcodeVideo" :class="{disabled: barcode}")
-      .truncate.pa2.mv2.bb.b--green 條碼：{{barcode || '等待掃描中...'}}
+      .pa2.mv2.bb.b--green.w-100.flex
+        .scan__code-label 條碼：
+        .scan__code-input
+          .w-100(v-show="!isManual") {{barcode || '等待掃描中...'}}
+          input.bw0(
+            v-show="isManual"
+            ref="input"
+            type="text"
+            v-model="barcode"
+            placeholder="請輸入條碼"
+          )
       .flex
         .w-50.pr2
           select.h-100.w-100(
@@ -15,10 +25,13 @@
           )
             option(v-for="camera in cameras" :value="camera.id") {{camera.label}}
         .w-50.pl2
-          button.ba.gold.bg-white.b--gold.pv2.ph3.w-100.br2(
+          button.ba.gold.bg-white.b--gold.pv2.ph3.w-100.br2.pointer(
+            v-show="isOnScan && !isManual"
+            @click="typeManually"
+          ) 手動輸入
+          button.ba.gold.bg-white.b--gold.pv2.ph3.w-100.br2.pointer(
             @click="startScanOnce"
-            :disabled="isOnScan"
-            :class="{pointer: !isOnScan, forbid: isOnScan}"
+            v-show="!isOnScan || isManual"
           ) 重新掃描
     div(v-else)
       h2.tc 找不到相機，請詢問工作人員 ⊙﹏⊙
@@ -48,6 +61,7 @@ export default {
       noDefaultCamera: false,
       hasNoCamera: false,
       isOnScan: false,
+      isManual: false,
       barcode: ''
     }
   },
@@ -95,6 +109,13 @@ export default {
     this.codeReader.reset()
   },
   methods: {
+    typeManually () {
+      this.isManual = true
+      this.codeReader.reset()
+      this.$nextTick(() => {
+        this.$refs.input.focus()
+      })
+    },
     nextPage () {
       if (this.barcode) {
         this.$store.commit(MUTATIONS.SET_BARCODE, this.barcode.trim())
@@ -105,6 +126,7 @@ export default {
       if (!this.targetCameraId) {
         return
       }
+      this.isManual = false
       this.isOnScan = true
       this.barcode = ''
       try {
@@ -114,12 +136,15 @@ export default {
         )
         this.barcode = result.text
       } catch (err) {
-        console.error(err)
-        if (err.name === 'NotAllowedError') {
+        if (err.name === 'NotFoundException') {
+          // cancel scan, noop
+        } else if (err.name === 'NotAllowedError') {
           const toRefresh = confirm('請允許我用相機掃條碼 ⊙﹏⊙')
           if (toRefresh) {
             this.startScanOnce()
           }
+        } else {
+          console.error(err)
         }
       } finally {
         this.isOnScan = false
@@ -139,6 +164,13 @@ export default {
   }
   .forbid {
     cursor: not-allowed;
+  }
+  $labelWidth: 3.5rem;
+  &__code-label {
+    width: $labelWidth;
+  }
+  &__code-input {
+    width: calc(100% - #{$labelWidth});
   }
 }
 </style>
