@@ -7,8 +7,11 @@ export const MUTATIONS = {
   SET_CAT: 'setCat',
   SET_COVER: 'setCover',
   SET_DETAIL: 'setDetail',
-  RESET_ITEM: 'resetItem'
+  RESET_ITEM: 'resetItem',
+  SET_MANUAL_MODE: 'setManualMode'
 }
+
+const FORCE_MANUAL_KEY = 'gcaa_force_manual'
 
 const DEFAULT_STATE = {
   barcode: '',
@@ -17,13 +20,27 @@ const DEFAULT_STATE = {
   mainCat: '',
   subCat: '',
   coverImage: '',
-  detailImage: ''
+  detailImage: '',
+  forceManual: () => {
+    return localStorage.getItem(FORCE_MANUAL_KEY) === 'true'
+  }
+}
+
+function genInitState () {
+  const ret = {}
+  Object.keys(DEFAULT_STATE).forEach((key) => {
+    const val = DEFAULT_STATE[key]
+    if (typeof val !== 'function') {
+      ret[key] = val
+    } else {
+      ret[key] = val()
+    }
+  })
+  return ret
 }
 
 export const state = () => {
-  return {
-    ...DEFAULT_STATE
-  }
+  return genInitState()
 }
 
 export const mutations = {
@@ -51,8 +68,13 @@ export const mutations = {
     state.detailImage = detailImage
   },
   [MUTATIONS.RESET_ITEM] (state) {
-    Object.keys(DEFAULT_STATE).forEach((key) => {
-      state[key] = DEFAULT_STATE[key]
+    const newState = genInitState()
+    Object.keys(newState).forEach((key) => {
+      state[key] = newState[key]
     })
+  },
+  [MUTATIONS.SET_MANUAL_MODE] (state, forceManual) {
+    state.forceManual = forceManual
+    localStorage.setItem(FORCE_MANUAL_KEY, forceManual)
   }
 }

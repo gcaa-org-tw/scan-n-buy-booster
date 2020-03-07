@@ -4,6 +4,7 @@
       .gray 第 ➀ 步
       h1.f3.mt0 掃描產品條碼
     div(v-if="cameras.length || !hasNoCamera")
+      button.ba.br2.b--silver.pv2.ph3.mb2.w-100.silver.bg-white(@click="toggleForceManual") {{manualSwitcherText}}
       div(v-if="noDefaultCamera")
         .mb3.lh-copy
           | 請幫我選一個鏡頭
@@ -54,11 +55,13 @@
 </template>
 <script>
 import { BrowserBarcodeReader } from '@zxing/library/esm5'
+import { mapState } from 'vuex'
 import { MUTATIONS } from '~/store'
 import VerticalStep from '~/components/VerticalStep'
 import StepButton from '~/components/StepButton'
 
 const DEFAULT_CAMERA_KEY = 'gcaa_camera_session_key'
+const STRANGE_DETECTION_TIMEOUT = 1000
 
 export default {
   components: {
@@ -74,12 +77,25 @@ export default {
       hasNoCamera: false,
       isOnScan: false,
       isManual: false,
-      barcode: ''
+      barcode: '',
+      detectorTimeout: null
     }
   },
   computed: {
+    ...mapState(['forceManual']),
     onlyOnyCamera () {
       return this.cameras.length < 2
+    },
+    canForceManual () {
+      // somehow Safari fall into this state without error...
+      return !this.isManual && !this.isOnScan
+    },
+    manualSwitcherText () {
+      if (this.forceManual) {
+        return '切換為半自動模式'
+      } else {
+        return '切換為純手動模式'
+      }
     }
   },
   watch: {
@@ -123,6 +139,7 @@ export default {
   },
   beforeDestroy () {
     this.codeReader.reset()
+    clearTimeout(this.detectorTimeout)
   },
   methods: {
     typeManually () {
@@ -131,6 +148,25 @@ export default {
       this.$nextTick(() => {
         this.$refs.input.focus()
       })
+    },
+    toggleForceManual () {
+      if (!this.forceManual) {
+        this.typeManually()
+      } else {
+        this.startScanOnce()
+      }
+
+      this.$store.commit(MUTATIONS.SET_MANUAL_MODE, !this.forceManual)
+    },
+    detectNeedManual () {
+      this.detectorTimeout = setTimeout(() => {
+        if (this.canForceManual) {
+          const accept = confirm('我沒辦法找到相機，可以幫忙切換成手動模式嗎？\n(◕‿◕)')
+          if (accept) {
+            this.toggleForceManual()
+          }
+        }
+      }, STRANGE_DETECTION_TIMEOUT)
     },
     async startScanOnce () {
       if (!this.targetCameraId) {
