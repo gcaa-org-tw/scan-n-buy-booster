@@ -18,7 +18,7 @@ const DEFAULT_STATE = {
   // subCat: '',
   // coverImage: '',
   // detailImage: ''
-  barcode: '12346',
+  barcode: '12345',
   mainCat: 'ddio-不要不要的主分類',
   subCat: 'ddio-拉拉拉的次分類',
   itemName: 'ddio-第一家鹹酥雞',

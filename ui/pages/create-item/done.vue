@@ -4,8 +4,12 @@
       | 上傳中
       i.fas.fa-spinner.fa-pulse.ml3
     .tc(v-else)
-      h1.lh-copy 上傳完成
-      .f4 (ﾉ´▽｀)ﾉ♪
+      div(v-if="isSucceeded")
+        h1.lh-copy 上傳完成
+        .f4 (ﾉ´▽｀)ﾉ♪
+      div(v-else)
+        h1.lh-copy 上傳失敗
+        .f4 ヽ(￣д￣;)ノ
       step-button.mt4(
         :primary="true"
         to="/create-item/scan"
@@ -22,10 +26,11 @@ export default {
   mixins: [postCreation],
   data () {
     return {
-      isUploading: true
+      isUploading: true,
+      isSucceeded: true
     }
   },
-  created () {
+  async created () {
     const state = this.$store.state
     const required = [
       'barcode',
@@ -40,12 +45,74 @@ export default {
       this.$router.push('/create-item/scan')
       return
     }
-    this.uploadIt()
+    this.isSucceeded = await this.uploadIt()
   },
   methods: {
-    uploadIt () {
+    async oneShot (data) {
+      const barcode = this.$store.state.barcode
+      const endpoint = `${process.env.META_API_ENDPOINT}/json/product/create`
+      const axiosOpt = {
+        headers: {
+          'x-thaubing-api-key': this.$auth.user[process.env.META_API_KEY]
+        }
+      }
+      data = {
+        barcode,
+        ...data
+      }
+      try {
+        const result = await this.$axios.post(endpoint, data, axiosOpt)
+        if (result.data.success !== 1) {
+          alert('上傳錯誤：\n' + result.data.errors.join('\n\t'))
+          return false
+        }
+      } catch (err) {
+        console.error(err)
+        alert(`上傳錯誤： ${err}`)
+        return false
+      }
+      return true
+    },
+    async uploadIt () {
       this.isUploading = true
-      // this.isUploading = false
+
+      const state = this.$store.state
+      const textData = {
+        corp_id: state.companyInfo.id,
+        corp_name: state.companyInfo.name,
+        category: state.mainCat,
+        product_name: state.itemName
+      }
+      if (state.subCat) {
+        textData.category_sub = state.subCat
+      }
+      // let's be server friendly => upload sequentially
+      try {
+        let success = await this.oneShot(textData)
+        if (!success) {
+          this.isUploading = false
+          return false
+        }
+        success = await this.oneShot({
+          photo_is_primary: 1,
+          photo: state.coverImage
+        })
+        if (!success) {
+          this.isUploading = false
+          return false
+        }
+        success = await this.oneShot({
+          photo: state.detailImage
+        })
+        if (!success) {
+          this.isUploading = false
+          return false
+        }
+      } catch (err) {
+        console.error(err)
+        alert(`上傳錯誤： ${err}`)
+      }
+      this.isUploading = false
     }
   }
 }
