@@ -8,7 +8,12 @@ const SentryPlugin = {
     if (dsn) {
       Sentry.init({
         dsn,
-        integrations: [new Integrations.Vue({ Vue, attachProps: true })]
+        integrations: [
+          new Integrations.Vue({ Vue, attachProps: true }),
+          new Integrations.CaptureConsole({
+            levels: ['error']
+          })
+        ]
       })
       Vue.prototype.$sentry = {
         self: Sentry,

@@ -113,6 +113,7 @@ export default {
         alert(`上傳錯誤： ${err}`)
       }
       this.isUploading = false
+      return true
     }
   }
 }
