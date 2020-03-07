@@ -93,6 +93,7 @@ export default {
     }
   },
   async created () {
+    this.$store.commit(MUTATIONS.RESET_ITEM)
     // TODO: if no camera? handle permission
     const videoInputDevices = await this.codeReader.getVideoInputDevices()
     this.cameras = videoInputDevices.map((dev) => {

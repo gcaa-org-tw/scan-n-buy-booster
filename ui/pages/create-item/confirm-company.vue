@@ -172,6 +172,10 @@ export default {
       this.hasName = !!this.name
       this.hasId = !!this.id
 
+      if (!this.hasName || !this.hasid) {
+        alert('網路上找不到公司資訊\n請幫我手動輸入～\n＼(◎o◎)／！')
+      }
+
       this.isLoading = false
     }
   }
