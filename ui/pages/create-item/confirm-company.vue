@@ -110,7 +110,6 @@ export default {
         resp = await this.$axios.get(endpoint, params)
       } catch (err) {
         alert('無法取得公司資訊，請重新掃描條碼')
-        this.$router.push('/create-item/scan')
         console.error(err)
         return false
       }
