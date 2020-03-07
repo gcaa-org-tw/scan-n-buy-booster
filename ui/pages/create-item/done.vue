@@ -78,10 +78,13 @@ export default {
 
       const state = this.$store.state
       const textData = {
-        corp_id: state.companyInfo.id,
+
         corp_name: state.companyInfo.name,
         category: state.mainCat,
         product_name: state.itemName
+      }
+      if (state.companyInfo.id) {
+        textData.corp_id = state.companyInfo.id
       }
       if (state.subCat) {
         textData.category_sub = state.subCat

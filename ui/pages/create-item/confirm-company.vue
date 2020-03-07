@@ -29,7 +29,7 @@
           .company__value
             span.truncate(v-if="hasId") {{id}}
             .bb.b--green(v-else)
-              input.w-100.bw0(v-model.trim="id" placeholder="請幫我輸入公司統編..")
+              input.w-100.bw0(v-model.trim="id" placeholder="請幫我輸入公司統編（選填）")
     .flex(slot="tail" v-if="!isExisted")
       .w-50.pr2
         step-button(
@@ -68,7 +68,7 @@ export default {
   computed: {
     ...mapState(['barcode', 'companyInfo']),
     allowNext () {
-      return this.name && this.id
+      return this.name
     }
   },
   watch: {
