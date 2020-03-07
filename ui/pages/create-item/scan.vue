@@ -113,7 +113,7 @@ export default {
       const defaultCamera = localStorage.getItem(DEFAULT_CAMERA_KEY, '')
       const defaultInTarget = this.cameras.find(camera => camera.id === defaultCamera)
       if (defaultInTarget) {
-        this.targetCameraId = defaultInTarget
+        this.targetCameraId = defaultInTarget.id
       } else {
         // ask user to select a camera
         this.noDefaultCamera = true
@@ -151,6 +151,8 @@ export default {
           const toRefresh = confirm('請允許我用相機掃條碼 ⊙﹏⊙')
           if (toRefresh) {
             this.startScanOnce()
+          } else {
+            this.typeManually()
           }
         } else {
           console.error(err)

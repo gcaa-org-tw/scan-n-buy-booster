@@ -5,8 +5,11 @@
 </template>
 <script>
 // TODO: console.error -> sentry
-// TODO: manually insert barcode if failed
-// TODO: manually insert company info if null
+// TODO: show fail reason when get empty company
+// TODO: cannot select && remember camera on phone T__T
+// TODO: health check to prevent server sleep XD
+// TODO: auto deploy
+// TODO: allow camera permission remember
 export default {
 }
 </script>
