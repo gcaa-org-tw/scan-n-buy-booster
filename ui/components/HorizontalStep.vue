@@ -1,5 +1,5 @@
 <template lang="pug">
-  .horizontal-step.min-vh-100.w-100.flex.justify-between(
+  .horizontal-step.w-100.flex.justify-between(
     :class="{'horizontal-step--right': isRightHand}"
   )
     .horizontal-step__tail.flex.flex-column.justify-between
@@ -61,6 +61,11 @@ export default {
 $toolbarWidth: 10rem;
 
 .horizontal-step {
+  // simple hack for mobile browser nav bar
+  // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+  max-height: calc(100vh - 1rem);
+  height: 100vh;
+  overflow: auto;
   flex-direction: column-reverse;
 
   &__content {

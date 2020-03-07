@@ -62,8 +62,7 @@ export default {
     '/json': 'https://thaubing.gcaa.org.tw'
   },
   'google-gtag': {
-    id: process.env.GA_ID,
-    debug: true
+    id: process.env.GA_ID
   },
   /*
   ** Build configuration
