@@ -148,14 +148,14 @@ export default {
       } catch (err) {
         if (err.name === 'NotFoundException') {
           // cancel scan, noop
-          this.typeManually()
+          console.error('Camera not found')
         } else if (err.name === 'NotAllowedError') {
           // TODO: add photo upload fall back..
           alert('我沒辦法打開相機，請手動輸入 ⊙﹏⊙')
-          this.typeManually()
         } else {
           console.error(err)
         }
+        this.typeManually()
       } finally {
         this.isOnScan = false
       }
