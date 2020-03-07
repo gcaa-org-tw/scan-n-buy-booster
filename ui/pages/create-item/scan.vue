@@ -94,7 +94,6 @@ export default {
   async created () {
     // TODO: if no camera? handle permission
     const videoInputDevices = await this.codeReader.getVideoInputDevices()
-    console.log('devices: ', videoInputDevices)
     this.cameras = videoInputDevices.map((dev) => {
       return {
         label: dev.label,

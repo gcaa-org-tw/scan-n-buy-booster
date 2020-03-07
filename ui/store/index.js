@@ -10,11 +10,12 @@ export const MUTATIONS = {
 
 const DEFAULT_STATE = {
   // barcode: '',
-  barcode: '00000',
-  companyInfo: null,
+  // companyInfo: null,
   itemName: '',
   mainCat: '',
   subCat: '',
+  barcode: '12346',
+  companyInfo: { id: '123456', name: 'ddio-測試公司' },
   coverImage: '',
   detailImage: ''
 }

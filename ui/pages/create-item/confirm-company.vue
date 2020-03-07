@@ -37,7 +37,7 @@
         ) 上一步
       .w-50.pl2
         step-button(
-          to="/create-item/set-category"
+          to="/create-item/set-name-category"
           :primary="true"
           :disabled="!allowNext"
         ) 下一步
@@ -45,6 +45,7 @@
 <script>
 import { mapState } from 'vuex'
 import { MUTATIONS } from '~/store'
+import { postCreation } from '~/utils/mixins'
 import VerticalStep from '~/components/VerticalStep'
 import StepButton from '~/components/StepButton'
 
@@ -53,6 +54,7 @@ export default {
     VerticalStep,
     StepButton
   },
+  mixins: [postCreation],
   data () {
     return {
       name: '',
@@ -78,9 +80,7 @@ export default {
     }
   },
   created () {
-    if (!this.barcode) {
-      this.$router.push('/create-item/scan')
-    } else if (this.companyInfo) {
+    if (this.companyInfo) {
       // init data from store once to handle `prev page`
       this.name = this.companyInfo.name
       this.id = this.companyInfo.id

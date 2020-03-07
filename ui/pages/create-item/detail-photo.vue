@@ -14,6 +14,7 @@
         ) 下一步
 </template>
 <script>
+import { postCreation } from '~/utils/mixins'
 import VerticalStep from '~/components/VerticalStep'
 import StepButton from '~/components/StepButton'
 
@@ -21,6 +22,7 @@ export default {
   components: {
     VerticalStep,
     StepButton
-  }
+  },
+  mixins: [postCreation]
 }
 </script>
