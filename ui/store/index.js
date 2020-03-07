@@ -1,3 +1,5 @@
+import { sample } from '~/utils/definition'
+
 export const MUTATIONS = {
   SET_BARCODE: 'setBarcode',
   SET_COMPANY: 'setCompany',
@@ -11,13 +13,18 @@ export const MUTATIONS = {
 const DEFAULT_STATE = {
   // barcode: '',
   // companyInfo: null,
-  itemName: '',
-  mainCat: '',
-  subCat: '',
+  // itemName: '',
+  // mainCat: '',
+  // subCat: '',
+  // coverImage: '',
+  // detailImage: ''
   barcode: '12346',
+  mainCat: 'ddio-不要不要的主分類',
+  subCat: 'ddio-拉拉拉的次分類',
+  itemName: 'ddio-第一家鹹酥雞',
   companyInfo: { id: '123456', name: 'ddio-測試公司' },
-  coverImage: '',
-  detailImage: ''
+  coverImage: sample.cover,
+  detailImage: sample.detail
 }
 
 export const state = () => {
