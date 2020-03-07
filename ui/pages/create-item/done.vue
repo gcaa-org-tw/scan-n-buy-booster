@@ -1,5 +1,5 @@
 <template lang="pug">
-  .done
+  .done.pa3
     h1 Done!
 </template>
 <script>

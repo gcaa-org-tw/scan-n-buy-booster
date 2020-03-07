@@ -21,7 +21,8 @@
             input.bw0.w-100(
               v-show="isManual"
               ref="input"
-              type="number"
+              type="text"
+              inputmode="numeric"
               v-model="barcode"
               placeholder="請輸入條碼"
             )
@@ -57,7 +58,7 @@ import { MUTATIONS } from '~/store'
 import VerticalStep from '~/components/VerticalStep'
 import StepButton from '~/components/StepButton'
 
-const DEFAULT_CAMERA_KEY = 'default_camera_session_key'
+const DEFAULT_CAMERA_KEY = 'gcaa_camera_session_key'
 
 export default {
   components: {
@@ -147,12 +148,9 @@ export default {
         if (err.name === 'NotFoundException') {
           // cancel scan, noop
         } else if (err.name === 'NotAllowedError') {
-          const toRefresh = confirm('請允許我用相機掃條碼 ⊙﹏⊙')
-          if (toRefresh) {
-            this.startScanOnce()
-          } else {
-            this.typeManually()
-          }
+          // TODO: add photo upload fall back..
+          alert('我沒辦法打開相機，請手動輸入 ⊙﹏⊙')
+          this.typeManually()
         } else {
           console.error(err)
         }

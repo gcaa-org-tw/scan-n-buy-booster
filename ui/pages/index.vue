@@ -10,6 +10,8 @@
 // TODO: health check to prevent server sleep XD
 // TODO: auto deploy
 // TODO: allow camera permission remember
+// TODO: ga
+// TODO: remove test state data
 export default {
 }
 </script>

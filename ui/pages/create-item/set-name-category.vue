@@ -24,7 +24,7 @@
         step-button(
           :primary="true"
           :disabled="!allowNext"
-          to="/create-item/cover-photo"
+          to="/create-item/take-photo"
         ) 下一步
 </template>
 <script>
