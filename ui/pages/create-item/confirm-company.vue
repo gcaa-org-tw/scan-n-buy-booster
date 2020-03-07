@@ -9,8 +9,8 @@
         i.fas.fa-spinner.fa-pulse.ml3
       .center(v-if="isExisted")
         .f5.tc 這筆已收集過惹
-        .f5.tc (◕︵◕)
-        .w-50
+        .f5.tc.mt2 (◕︵◕)
+        .w-50.center.mt4
           step-button(
             to="/create-item/scan"
           ) 再來一筆
@@ -80,6 +80,10 @@ export default {
   created () {
     if (!this.barcode) {
       this.$router.push('/create-item/scan')
+    } else if (this.companyInfo) {
+      // init data from store once to handle `prev page`
+      this.name = this.companyInfo.name
+      this.id = this.companyInfo.id
     } else {
       this.getCompany()
     }
@@ -161,6 +165,7 @@ export default {
       this.isLoading = true
       this.isExisted = await this.getCacheCompany()
       if (this.isExisted) {
+        this.isLoading = false
         return
       }
       await this.crawlCompany()
