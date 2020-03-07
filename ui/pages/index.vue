@@ -6,7 +6,6 @@
 <script>
 // TODO: allow camera permission remember
 // TODO: show upload count
-// TODO: remove test state data
 // TODO: health check to prevent server sleep XD
 // TODO: auto deploy
 export default {
