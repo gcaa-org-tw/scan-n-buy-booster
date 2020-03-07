@@ -31,7 +31,7 @@ export const mutations = {
     state.barcode = barcode
   },
   [MUTATIONS.SET_COMPANY] (state, companyInfo) {
-    if (companyInfo.id && companyInfo.name) {
+    if (companyInfo.name) {
       state.companyInfo = companyInfo
     } else {
       console.error('Invalid company info', companyInfo)

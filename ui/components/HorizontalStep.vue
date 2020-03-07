@@ -64,8 +64,7 @@ $toolbarWidth: 10rem;
   // simple hack for mobile browser nav bar
   // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
   max-height: calc(100vh - 1rem);
-  height: 100vh;
-  overflow: auto;
+  height: calc(100vh - 1rem);
   flex-direction: column-reverse;
 
   &__content {

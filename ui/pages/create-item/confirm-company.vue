@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     updateCompany () {
-      if (this.name && this.id) {
+      if (this.name) {
         this.$store.commit(MUTATIONS.SET_COMPANY, {
           name: this.name,
           id: this.id
@@ -172,7 +172,7 @@ export default {
       this.hasName = !!this.name
       this.hasId = !!this.id
 
-      if (!this.hasName || !this.hasid) {
+      if (!this.hasName || !this.hasId) {
         alert('網路上找不到公司資訊\n請幫我手動輸入～\n＼(◎o◎)／！')
       }
 

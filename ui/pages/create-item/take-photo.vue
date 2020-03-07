@@ -4,7 +4,7 @@
       .gray 第 {{stepTitle.number}} 步
       h1.f3.mv0 {{stepTitle.title}}
     .cover__photo.w-100.relative.flex.items-center
-      video.w-100.h-100(
+      video.w-100(
         ref="camera"
         autoplay="true"
         :class="{'o-50': isShowingResult, 'o-100': !isShowingResult }"
@@ -245,6 +245,9 @@ export default {
 .cover {
   &__photo {
     min-height: 10vh;
+    video {
+      max-height: 30vh;
+    }
   }
   &__result {
     transition: opacity 200ms ease-in;
@@ -274,7 +277,10 @@ export default {
   }
   @media screen and (orientation: landscape) {
     &__photo {
-      height: 100%;
+      height: calc(100vh - 2rem);
+      video {
+        max-height: calc(100vh - 2rem);
+      }
     }
     &__tail {
       .cover__step:first-child {
