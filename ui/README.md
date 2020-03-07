@@ -9,6 +9,7 @@
   - `META_API_KEY`, key for meta API server
 - Optional:
   - `SENTRY_DSN`: Sentry DSN
+  - `GA_ID`: Google analytics ID
 
 ## Build Setup
 

@@ -1,4 +1,4 @@
-import { sample } from '~/utils/definition'
+// import { sample } from '~/utils/definition'
 
 export const MUTATIONS = {
   SET_BARCODE: 'setBarcode',
@@ -11,20 +11,13 @@ export const MUTATIONS = {
 }
 
 const DEFAULT_STATE = {
-  // barcode: '',
-  // companyInfo: null,
-  // itemName: '',
-  // mainCat: '',
-  // subCat: '',
-  // coverImage: '',
-  // detailImage: ''
-  barcode: '12345',
-  mainCat: 'ddio-不要不要的主分類',
-  subCat: 'ddio-拉拉拉的次分類',
-  itemName: 'ddio-第一家鹹酥雞',
-  companyInfo: { id: '123456', name: 'ddio-測試公司' },
-  coverImage: sample.cover,
-  detailImage: sample.detail
+  barcode: '',
+  companyInfo: null,
+  itemName: '',
+  mainCat: '',
+  subCat: '',
+  coverImage: '',
+  detailImage: ''
 }
 
 export const state = () => {
@@ -58,7 +51,7 @@ export const mutations = {
     state.detailImage = detailImage
   },
   [MUTATIONS.RESET_ITEM] (state) {
-    Object.keys(DEFAULT_STATE, (key) => {
+    Object.keys(DEFAULT_STATE).forEach((key) => {
       state[key] = DEFAULT_STATE[key]
     })
   }

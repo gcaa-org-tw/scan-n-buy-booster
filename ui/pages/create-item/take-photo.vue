@@ -14,12 +14,17 @@
         :class="{'o-0': !isShowingResult, 'o-100': isShowingResult }"
       )
     template(slot="action")
-      .cover__major-action.tc
+      .cover__major-action.flex.items-stretch.justify-center
         button.white.bw0.br2.f3(
           :class="majorActionClass"
           @click="clickMajor"
         )
           i.fas(:class="{'fa-camera-retro': isTakingPhoto, 'fa-sync': !isTakingPhoto}")
+        .dib.ml2(v-show="allowNext && !isTakingPhoto")
+          button.white.bw0.br2.f4.cover__major-next.h-100(
+            :class="majorActionClass"
+            @click="nextStep"
+          ) 下一步
       .cover__minor-action.flex.f6
         .w-50.pr1
           button.mb2.ba.silver.b--silver.bg-white.pv1.ph2.w-100.br2.pointer(
@@ -244,9 +249,14 @@ export default {
   &__result {
     transition: opacity 200ms ease-in;
   }
-  &__major-action button {
-    padding: 1.5rem;
+  &__major-action {
     margin: 1.5rem 0;
+    button {
+      padding: 1.5rem;
+    }
+    button.cover__major-next {
+    padding: 1.5rem 0.5rem;
+  }
   }
   @media screen and (orientation: portrait) {
     &__tail {

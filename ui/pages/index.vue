@@ -5,8 +5,6 @@
 </template>
 <script>
 // TODO: allow camera permission remember
-// TODO: ga
-// TODO: better indication for camera next step
 // TODO: show upload count
 // TODO: remove test state data
 // TODO: health check to prevent server sleep XD

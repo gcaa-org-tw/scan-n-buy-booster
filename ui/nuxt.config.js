@@ -49,7 +49,8 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/proxy'
+    '@nuxtjs/proxy',
+    '@nuxtjs/google-gtag'
   ],
   /*
   ** Axios module configuration
@@ -59,6 +60,10 @@ export default {
   },
   proxy: {
     '/json': 'https://thaubing.gcaa.org.tw'
+  },
+  'google-gtag': {
+    id: process.env.GA_ID,
+    debug: true
   },
   /*
   ** Build configuration
