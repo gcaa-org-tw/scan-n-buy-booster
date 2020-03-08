@@ -2,7 +2,7 @@
   vertical-step.editname.pa3
     template(slot="head")
       .gray 第 ➂ 步
-      h1.f3.mt0 填寫產品名稱與分類
+      h1.f3.mv0 填寫產品名稱與分類
     div
       .bb.b--green.mv2.pv1
         input.w-100.bw0(type="text" v-model.trim="name" placeholder="產品名稱")

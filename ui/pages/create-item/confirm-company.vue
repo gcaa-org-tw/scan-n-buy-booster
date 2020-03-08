@@ -2,7 +2,7 @@
   vertical-step.company.pa3
     template(slot="head")
       .gray 第 ② 步
-      h1.f3.mt0 確認公司資訊
+      h1.f3.mv0 確認公司資訊
     .company__main
       .tc(v-if="isLoading")
         | 查詢公司資料中

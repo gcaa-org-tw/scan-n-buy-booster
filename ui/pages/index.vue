@@ -4,7 +4,6 @@
       nuxt-link.bg-white.ph3.pv2.ba.br2.db.dim.link.green(to="/create-item/scan") 新增第一筆！
 </template>
 <script>
-// TODO: allow camera permission remember
 // TODO: show upload count
 // TODO: health check to prevent server sleep XD
 // TODO: auto deploy

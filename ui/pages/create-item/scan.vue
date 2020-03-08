@@ -2,7 +2,7 @@
   vertical-step.scan.pa3
     template(slot="head")
       .gray 第 ➀ 步
-      h1.f3.mt0 掃描產品條碼
+      h1.f3.mv0 掃描產品條碼
     div(v-if="cameras.length || !hasNoCamera")
       button.ba.br2.b--silver.pv2.ph3.mb2.w-100.silver.bg-white(@click="toggleForceManual") {{manualSwitcherText}}
       div(v-if="noDefaultCamera")
@@ -119,6 +119,12 @@ export default {
       }
     })
 
+    if (this.forceManual) {
+      // stop choose camera when it is disabled
+      this.typeManually()
+      return
+    }
+
     if (this.cameras.length < 1) {
       this.hasNoCamera = true
       return
@@ -136,6 +142,7 @@ export default {
         this.noDefaultCamera = true
       }
     }
+    this.detectNeedManual()
   },
   beforeDestroy () {
     this.codeReader.reset()

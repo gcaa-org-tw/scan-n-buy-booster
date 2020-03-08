@@ -4,11 +4,16 @@
       .gray 第 {{stepTitle.number}} 步
       h1.f3.mv0 {{stepTitle.title}}
     .cover__photo.w-100.relative.flex.items-center
-      video.w-100(
+      video.cover__video.w-100(
+        v-if="!forceManual"
         ref="camera"
         autoplay="true"
         :class="{'o-50': isShowingResult, 'o-100': !isShowingResult }"
       )
+      .cover__video.w-100.h-100.o-50.bg-light-gray.flex.items-center.justify-center.f4(v-else)
+        | 請點旁邊的
+        i.fas.fa-camera-retro.mh2
+        | 開始拍照
       .cover__result.absolute.top-0.left-0.w-100.h-100.contain.bg-center.bg-white(
         :style="photoStyle"
         :class="{'o-0': !isShowingResult, 'o-100': isShowingResult }"
@@ -16,15 +21,29 @@
     template(slot="action")
       .cover__major-action.flex.items-stretch.justify-center
         button.white.bw0.br2.f3(
+          v-if="!forceManual || !this.isTakingPhoto"
           :class="majorActionClass"
           @click="clickMajor"
         )
-          i.fas(:class="{'fa-camera-retro': isTakingPhoto, 'fa-sync': !isTakingPhoto}")
+          i.fas(:class="photoTakingIcon")
+        div(v-else)
+          label.dib.white.bw0.br2.f3.flex.items-center.justify-center.pointer(
+            for="native-camera"
+            :class="majorActionClass"
+          )
+            i.fas(:class="photoTakingIcon")
+          input.dn(
+            id="native-camera"
+            type="file"
+            accept="image/*"
+            capture
+            @change="getNativePhoto"
+          )
         .dib.ml2(v-show="allowNext && !isTakingPhoto")
           button.white.bw0.br2.f4.cover__major-next.h-100(
             :class="majorActionClass"
             @click="nextStep"
-          ) 下一步
+          ) {{nextStepText}}
       .cover__minor-action.flex.f6
         .w-50.pr1
           button.mb2.ba.silver.b--silver.bg-white.pv1.ph2.w-100.br2.pointer(
@@ -52,6 +71,8 @@
  * 2. Show sample image at first time
  */
 import CameraPhoto, { FACING_MODES, IMAGE_TYPES } from 'jslib-html5-camera-photo'
+import { mapState } from 'vuex'
+import Compressor from 'compressorjs'
 import { MUTATIONS } from '~/store'
 import { postCreation } from '~/utils/mixins'
 import HorizontalStep from '~/components/HorizontalStep'
@@ -85,6 +106,10 @@ export default {
     }
   },
   computed: {
+    ...mapState(['forceManual']),
+    photoTakingIcon () {
+      return this.isTakingPhoto ? 'fa-camera-retro' : 'fa-sync'
+    },
     allowNext () {
       if (this.isTakingCover) {
         return !!this.coverPhoto
@@ -160,6 +185,10 @@ export default {
     }
   },
   async mounted () {
+    if (this.forceManual) {
+      // use <input capture> when browser doesn't support camera
+      return
+    }
     this.camera = new CameraPhoto(this.$refs.camera)
     try {
       await this.camera.startCamera(FACING_MODES.ENVIRONMENT, {
@@ -177,6 +206,36 @@ export default {
     }
   },
   methods: {
+    getNativePhoto (event) {
+      const photo = event.target.files[0]
+      if (!photo || !photo.type.match('image.*')) {
+        return
+      }
+      const reader = new FileReader()
+      reader.onload = (readerEvent) => {
+        const dataUrl = readerEvent.target.result
+        if (this.isTakingCover) {
+          this.coverPhoto = dataUrl
+          this.$store.commit(MUTATIONS.SET_COVER, dataUrl)
+        } else {
+          this.detailPhoto = dataUrl
+          this.$store.commit(MUTATIONS.SET_DETAIL, dataUrl)
+        }
+        this.isTakingPhoto = false
+      }
+      // eslint-disable-next-line no-new
+      new Compressor(photo, {
+        quality: 0.8,
+        mimeType: 'image/jpeg',
+        width: 1280,
+        success: (result) => {
+          reader.readAsDataURL(result)
+        },
+        error: (err) => {
+          console.error(err.message)
+        }
+      })
+    },
     clickMajor () {
       if (this.isShowingSample) {
         this.toggleSample()
@@ -192,13 +251,13 @@ export default {
         imageType: IMAGE_TYPES.JPG,
         imageCompression: 0.8
       }
-      const imageUri = this.camera.getDataUri(photoConfig)
+      const dataUrl = this.camera.getDataUri(photoConfig)
       if (this.isTakingCover) {
-        this.coverPhoto = imageUri
-        this.$store.commit(MUTATIONS.SET_COVER, imageUri)
+        this.coverPhoto = dataUrl
+        this.$store.commit(MUTATIONS.SET_COVER, dataUrl)
       } else {
-        this.detailPhoto = imageUri
-        this.$store.commit(MUTATIONS.SET_DETAIL, imageUri)
+        this.detailPhoto = dataUrl
+        this.$store.commit(MUTATIONS.SET_DETAIL, dataUrl)
       }
     },
     toggleSample () {
@@ -231,11 +290,13 @@ export default {
     },
     nextStep () {
       if (this.isTakingCover) {
-        this.showDetailSample = false
         this.isTakingPhoto = true
         this.isTakingCover = false
       } else {
-        this.$router.push('/create-item/done')
+        const sureImGoingToUpload = confirm('所有資料都準備好了嗎？上傳後就無法再更改囉\nԅ⁞ ◑ ₒ ◑ ⁞ᓄ')
+        if (sureImGoingToUpload) {
+          this.$router.push('/create-item/done')
+        }
       }
     }
   }
@@ -245,7 +306,7 @@ export default {
 .cover {
   &__photo {
     min-height: 10vh;
-    video {
+    &__video {
       max-height: 30vh;
     }
   }
@@ -254,12 +315,11 @@ export default {
   }
   &__major-action {
     margin: 1.5rem 0;
-    button {
-      padding: 1.5rem;
+    button,
+    label {
+      height: 4.5rem;
+      width: 4.5rem;
     }
-    button.cover__major-next {
-    padding: 1.5rem 0.5rem;
-  }
   }
   @media screen and (orientation: portrait) {
     &__tail {
@@ -278,7 +338,7 @@ export default {
   @media screen and (orientation: landscape) {
     &__photo {
       height: calc(100vh - 2rem);
-      video {
+      &__video {
         max-height: calc(100vh - 2rem);
       }
     }
