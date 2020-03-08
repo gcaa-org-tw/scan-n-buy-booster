@@ -18,10 +18,12 @@
         :style="photoStyle"
         :class="{'o-0': !isShowingResult, 'o-100': isShowingResult }"
       )
+        .flex.items-center.justify-center.white.bg-black.o-30.f3.h-100(v-show="isShowingSample")
+          | 範例圖片
     template(slot="action")
       .cover__major-action.flex.items-stretch.justify-center
         button.white.bw0.br2.f3(
-          v-if="!forceManual || !this.isTakingPhoto"
+          v-if="!forceManual || !this.isTakingPhoto || this.isShowingSample"
           :class="majorActionClass"
           @click="clickMajor"
         )

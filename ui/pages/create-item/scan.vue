@@ -138,8 +138,7 @@ export default {
       if (defaultInTarget) {
         this.targetCameraId = defaultInTarget.id
       } else {
-        // ask user to select a camera
-        this.noDefaultCamera = true
+        this.targetCameraId = this.cameras[0].id
       }
     }
     this.detectNeedManual()
