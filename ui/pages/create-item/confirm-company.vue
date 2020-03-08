@@ -147,7 +147,7 @@ export default {
       const corpId = data.corp_id
       const corpName = data.corp_name
 
-      if (!corpId || !corpName) {
+      if (!corpName) {
         return false
       }
 
