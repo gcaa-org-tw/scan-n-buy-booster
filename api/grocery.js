@@ -59,7 +59,11 @@ function getCompanyState (company) {
 }
 
 function getCompanyName (company) {
-  return company.公司名稱 || company.商業名稱 || company.名稱
+  const name = company.公司名稱 || company.商業名稱 || company.名稱
+  if (Array.isArray(name)) {
+    return name[0]
+  }
+  return name
 }
 
 function getCompanyAsset (company) {
