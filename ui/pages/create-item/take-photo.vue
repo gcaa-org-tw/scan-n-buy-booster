@@ -308,9 +308,10 @@ export default {
 .cover {
   &__photo {
     min-height: 10vh;
-    &__video {
-      max-height: 30vh;
-    }
+  }
+  &__video {
+    min-height: 10vh;
+    max-height: 30vh;
   }
   &__result {
     transition: opacity 200ms ease-in;
@@ -340,9 +341,9 @@ export default {
   @media screen and (orientation: landscape) {
     &__photo {
       height: calc(100vh - 2rem);
-      &__video {
-        max-height: calc(100vh - 2rem);
-      }
+    }
+    &__video {
+      max-height: calc(100vh - 2rem);
     }
     &__tail {
       .cover__step:first-child {
