@@ -142,15 +142,12 @@ module.exports = async function (req, res) {
     return
   }
 
-  const company = await getCompanyId(companyName)
+  let company = await getCompanyId(companyName)
 
   if (!company) {
-    ret.reason = `Company ${companyName} not found`
-    res.json(ret)
-    return
-  }
-
-  if (company.name !== companyName) {
+    Sentry.captureMessage(`Company ${companyName} from barcode ${barcode} not found in Ronny`)
+    company = {}
+  } else if (company.name !== companyName) {
     Sentry.captureMessage(`Name collision on barcode ${barcode}, GS1 = ${companyName}, Ronny = ${company.name}`)
   }
 

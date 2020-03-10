@@ -78,7 +78,6 @@ export default {
 
       const state = this.$store.state
       const textData = {
-
         corp_name: state.companyInfo.name,
         category: state.mainCat,
         product_name: state.itemName
