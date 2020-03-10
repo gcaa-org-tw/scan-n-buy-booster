@@ -3,6 +3,8 @@
     template(slot="head")
       .gray 第 {{stepTitle.number}} 步
       h1.f3.mv0 {{stepTitle.title}}
+      .mt2.f7.orange(v-show="!isTakingCover")
+        | 請拍下可以明確辨識【製造商】資訊的照片
     .cover__photo.w-100.relative.flex.items-center
       video.cover__video.w-100(
         v-if="!forceManual"

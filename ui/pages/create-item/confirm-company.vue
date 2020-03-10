@@ -22,8 +22,12 @@
           .company__label 公司名稱：
           .company__value
             span.truncate(v-if="hasName") {{name}}
-            .bb.b--green(v-else)
-              input.w-100.bw0(v-model.trim="name" placeholder="請幫我輸入公司名稱..")
+            .w-100(v-else)
+              .bb.b--green
+                input.w-100.bw0(v-model.trim="name" placeholder="請輸入【製造商】名稱..")
+              .mt2.f7.orange
+                | 請輸入【製造商】名稱，若找不到，請輸入【負責廠商】或【進口商】名稱
+
     .flex(slot="tail" v-if="!isExisted")
       .w-50.pr2
         step-button(
@@ -74,6 +78,7 @@ export default {
       // init data from store once to handle `prev page`
       this.name = this.companyInfo.name
       this.id = this.companyInfo.id
+      this.hasName = !!this.name
     } else {
       this.getCompany()
     }

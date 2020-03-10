@@ -4,8 +4,11 @@
       .gray 第 ➂ 步
       h1.f3.mv0 填寫產品名稱與分類
     div
-      .bb.b--green.mv2.pv1
-        input.w-100.bw0(type="text" v-model.trim="name" placeholder="產品名稱")
+      .mt2.mb4
+        .bb.b--green.pv1
+          input.w-100.bw0(type="text" v-model.trim="name" placeholder="產品名稱")
+        .mt2.f7.orange
+          | 請完整輸入包裝上的【品名】，若找不到，請輸入產品正面的主要文字或賣場標籤的文字
       div(:class="{disabled: !name}" @click="showTips")
         .mv2
           select.w-100.pv1(v-model="mainCat" :disabled="!name")
