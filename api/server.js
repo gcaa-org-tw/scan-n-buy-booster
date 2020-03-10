@@ -4,11 +4,11 @@ const jwt = require('express-jwt')
 const jwksRsa = require('jwks-rsa')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const groceryHandler = require('./grocery')
-const axios = require('axios')
-const qs = require('querystring')
 
 require('dotenv').config()
+
+const groceryHandler = require('./grocery')
+const mirrorHandler = require('./mirror')
 
 // setup log
 const Sentry = require('@sentry/node')
@@ -59,40 +59,9 @@ app.get('/health', function (req, res) {
 
 app.get('/grocery/:barcode', checkJwt, groceryHandler)
 
-app.post('/backup', checkJwt, async (req, res) => {
-  const data = req.body
-  if (!data.barcode || !data.origName || !data.id || !data.name) {
-    res.json({
-      success: false
-    })
-    return
-  }
+app.post('/mirror/ping', checkJwt, mirrorHandler.ping)
 
-  const payload = {
-    // barcode
-    'entry.315625535': data.barcode,
-    // orig name
-    'entry.1903667587': data.origName,
-    // orig id
-    'entry.62931594': data.id,
-    // new name
-    'entry.1476091419': data.name
-  }
-  const endpoint = process.env.BACKUP_ENDPOINT
-  const params = {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  }
-  await axios.post(
-    endpoint,
-    qs.stringify(payload),
-    params
-  )
-  res.json({
-    success: true
-  })
-})
+app.get('/mirror/counter', mirrorHandler.counter)
 
 app.use(function (err, req, res, next) {
   console.error(err.stack)

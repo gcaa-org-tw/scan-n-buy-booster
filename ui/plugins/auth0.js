@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import createAuth0Client from '@auth0/auth0-spa-js'
+import { setComAuth } from '~/utils/api'
 
 const ORIGINAL_URL_KEY = 'urlWhenLogin'
 
@@ -67,6 +68,8 @@ export const useAuth0 = ({
           this.isAuthenticated = isAuthenticated
           this.user = await this.auth0Client.getUser()
           this.token = (await this.auth0Client.getIdTokenClaims()).__raw
+
+          setComAuth(this.token)
         }
         this.loading = false
       }

@@ -4,9 +4,12 @@
       | 上傳中
       i.fas.fa-spinner.fa-pulse.ml3
     .tc(v-else)
-      div(v-if="isSucceeded")
-        h1.lh-copy 上傳完成
-        .f4 (ﾉ´▽｀)ﾉ♪
+      div.lh-copy(v-if="isSucceeded")
+        h1.mv2.green.f2 上傳完成
+        .f5 (ﾉ´▽｀)ﾉ♪
+        .f5 產品紀錄量來到
+        .f2.white.mv2.b.bg-yellow.dib.ph3 {{totalItems.toLocaleString()}}
+        .f5 筆囉！
       div(v-else)
         h1.lh-copy 上傳失敗
         .f4 ヽ(￣д￣;)ノ
@@ -16,8 +19,11 @@
       ) 再來一筆
 </template>
 <script>
+import { mapState } from 'vuex'
 import { postCreation } from '~/utils/mixins'
 import StepButton from '~/components/StepButton'
+import { postComEndpoint } from '~/utils/api'
+import { MUTATIONS } from '~/store'
 
 export default {
   components: {
@@ -29,6 +35,9 @@ export default {
       isUploading: true,
       isSucceeded: true
     }
+  },
+  computed: {
+    ...mapState(['totalItems'])
   },
   async created () {
     const state = this.$store.state
@@ -73,29 +82,19 @@ export default {
       }
       return true
     },
-    async backupToFormIfNeeded () {
+    async updateMirror () {
       const state = this.$store.state
       const company = state.companyInfo
-      if (!company.origName || !company.name) {
-        return
-      }
       const payload = {
         barcode: state.barcode,
         origName: company.origName,
         id: company.id,
         name: company.name
       }
-      const params = {
-        headers: {
-          Authorization: `Bearer ${this.$auth.token}`
-        }
+      const result = await postComEndpoint('/mirror/ping', payload)
+      if (result.data.success) {
+        this.$store.commit(MUTATIONS.SET_TOTAL_ITEMS, result.data.sum)
       }
-      const endpoint = `${process.env.COMPANY_API_ENDPOINT}/backup`
-      await this.$axios.post(
-        endpoint,
-        payload,
-        params
-      )
     },
     async uploadIt () {
       this.isUploading = true
@@ -138,8 +137,9 @@ export default {
         console.error(err)
         alert(`上傳錯誤： ${err}`)
       }
+
       try {
-        await this.backupToFormIfNeeded()
+        await this.updateMirror()
       } catch (err) {
         console.error('error when backup', err)
       }

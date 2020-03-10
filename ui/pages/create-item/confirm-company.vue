@@ -49,6 +49,7 @@ import { MUTATIONS } from '~/store'
 import { postCreation } from '~/utils/mixins'
 import VerticalStep from '~/components/VerticalStep'
 import StepButton from '~/components/StepButton'
+import { getComEndpoint } from '~/utils/api'
 
 export default {
   components: {
@@ -113,16 +114,10 @@ export default {
       }
     },
     async crawlCompany () {
-      const params = {
-        headers: {
-          Authorization: `Bearer ${this.$auth.token}`
-        }
-      }
       const barcode = encodeURIComponent(this.barcode)
-      const endpoint = `${process.env.COMPANY_API_ENDPOINT}/grocery/${barcode}`
       let resp = null
       try {
-        resp = await this.$axios.get(endpoint, params)
+        resp = await getComEndpoint(`/grocery/${barcode}`)
       } catch (err) {
         alert('無法取得公司資訊，請重新掃描條碼')
         console.error(err)

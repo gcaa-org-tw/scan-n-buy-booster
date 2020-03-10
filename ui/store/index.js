@@ -9,7 +9,8 @@ export const MUTATIONS = {
   SET_DETAIL: 'setDetail',
   RESET_ITEM: 'resetItem',
   SET_MANUAL_MODE: 'setManualMode',
-  ENABLE_MULTIPLE_COMPANY: 'enableMultipleName'
+  ENABLE_MULTIPLE_COMPANY: 'enableMultipleName',
+  SET_TOTAL_ITEMS: 'setTotalItems'
 }
 
 const FORCE_MANUAL_KEY = 'gcaa_force_manual'
@@ -23,6 +24,7 @@ const DEFAULT_STATE = {
   subCat: '',
   coverImage: '',
   detailImage: '',
+  totalItems: 0,
   forceManual: () => {
     return localStorage.getItem(FORCE_MANUAL_KEY) === 'true'
   }
@@ -81,5 +83,8 @@ export const mutations = {
   [MUTATIONS.SET_MANUAL_MODE] (state, forceManual) {
     state.forceManual = forceManual
     localStorage.setItem(FORCE_MANUAL_KEY, forceManual)
+  },
+  [MUTATIONS.SET_TOTAL_ITEMS] (state, total) {
+    state.totalItems = total
   }
 }
