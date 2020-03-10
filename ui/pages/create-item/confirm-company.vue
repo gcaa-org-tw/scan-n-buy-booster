@@ -21,10 +21,13 @@
         .flex.mv2
           .company__label 公司名稱：
           .company__value
-            span.truncate(v-if="hasName") {{name}}
+            div(v-if="hasName && !hasMultipleCompany")
+              .truncate {{name}}
+              button.br1.pointer.dim.mt2.ba.b--gray.gray.bg-white(@click="enableMultipleName")
+                | 使用製造商名稱
             .w-100(v-else)
               .bb.b--green
-                input.w-100.bw0(v-model.trim="name" placeholder="請輸入【製造商】名稱..")
+                input.w-100.bw0(ref="name" v-model.trim="name" placeholder="請輸入【製造商】名稱..")
               .mt2.f7.orange
                 | 請輸入【製造商】名稱，若找不到，請輸入【負責廠商】或【進口商】名稱
 
@@ -56,14 +59,17 @@ export default {
   data () {
     return {
       name: '',
-      hasName: false,
       id: '',
+      hasName: false,
       isExisted: false,
-      isLoading: false
+      isLoading: false,
+
+      origName: '',
+      hasMultipleName: false
     }
   },
   computed: {
-    ...mapState(['barcode', 'companyInfo']),
+    ...mapState(['barcode', 'companyInfo', 'hasMultipleCompany']),
     allowNext () {
       return this.name
     }
@@ -71,23 +77,37 @@ export default {
   watch: {
     name () {
       this.updateCompany()
+    },
+    origName () {
+      this.updateCompany()
     }
   },
   created () {
     if (this.companyInfo) {
       // init data from store once to handle `prev page`
       this.name = this.companyInfo.name
-      this.id = this.companyInfo.id
       this.hasName = !!this.name
+      this.id = this.companyInfo.id
     } else {
       this.getCompany()
     }
   },
   methods: {
+    enableMultipleName () {
+      this.origName = this.name
+      this.name = ''
+      this.$store.commit(MUTATIONS.ENABLE_MULTIPLE_COMPANY)
+      this.$nextTick(() => {
+        if (this.$refs.name) {
+          this.$refs.name.focus()
+        }
+      })
+    },
     updateCompany () {
       if (this.name) {
         this.$store.commit(MUTATIONS.SET_COMPANY, {
           name: this.name,
+          origName: this.origName,
           id: this.id
         })
       }
@@ -114,9 +134,11 @@ export default {
       }
       const data = resp.data.data
       data.name = data.name || data.rawName
-      this.name = data.name
-      this.id = data.id
-      this.$store.commit(MUTATIONS.SET_COMPANY, data)
+      if (!this.companyInfo) {
+        this.name = data.name
+        this.id = data.id
+        this.$store.commit(MUTATIONS.SET_COMPANY, data)
+      }
       return true
     },
     async getCacheCompany () {
@@ -159,14 +181,15 @@ export default {
     async getCompany () {
       this.isLoading = true
       this.isExisted = await this.getCacheCompany()
+      this.isExisted = false
       if (this.isExisted) {
         this.isLoading = false
         return
       }
       await this.crawlCompany()
-      this.hasName = !!this.name
 
-      if (!this.hasName) {
+      this.hasName = !!this.name
+      if (!this.name) {
         alert('網路上找不到公司資訊\n請幫我手動輸入～\n＼(◎o◎)／！')
       }
 

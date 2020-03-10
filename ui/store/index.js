@@ -8,7 +8,8 @@ export const MUTATIONS = {
   SET_COVER: 'setCover',
   SET_DETAIL: 'setDetail',
   RESET_ITEM: 'resetItem',
-  SET_MANUAL_MODE: 'setManualMode'
+  SET_MANUAL_MODE: 'setManualMode',
+  ENABLE_MULTIPLE_COMPANY: 'enableMultipleName'
 }
 
 const FORCE_MANUAL_KEY = 'gcaa_force_manual'
@@ -16,6 +17,7 @@ const FORCE_MANUAL_KEY = 'gcaa_force_manual'
 const DEFAULT_STATE = {
   barcode: '',
   companyInfo: null,
+  hasMultipleCompany: false,
   itemName: '',
   mainCat: '',
   subCat: '',
@@ -53,6 +55,9 @@ export const mutations = {
     } else {
       console.error('Invalid company info', companyInfo)
     }
+  },
+  [MUTATIONS.ENABLE_MULTIPLE_COMPANY] (state) {
+    state.hasMultipleCompany = true
   },
   [MUTATIONS.SET_NAME] (state, itemName) {
     state.itemName = itemName

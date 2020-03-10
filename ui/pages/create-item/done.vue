@@ -73,6 +73,30 @@ export default {
       }
       return true
     },
+    async backupToFormIfNeeded () {
+      const state = this.$store.state
+      const company = state.companyInfo
+      if (!company.origName || !company.name) {
+        return
+      }
+      const payload = {
+        barcode: state.barcode,
+        origName: company.origName,
+        id: company.id,
+        name: company.name
+      }
+      const params = {
+        headers: {
+          Authorization: `Bearer ${this.$auth.token}`
+        }
+      }
+      const endpoint = `${process.env.COMPANY_API_ENDPOINT}/backup`
+      await this.$axios.post(
+        endpoint,
+        payload,
+        params
+      )
+    },
     async uploadIt () {
       this.isUploading = true
 
@@ -113,6 +137,11 @@ export default {
       } catch (err) {
         console.error(err)
         alert(`上傳錯誤： ${err}`)
+      }
+      try {
+        await this.backupToFormIfNeeded()
+      } catch (err) {
+        console.error('error when backup', err)
       }
       this.isUploading = false
       return true
