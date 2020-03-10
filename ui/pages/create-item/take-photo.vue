@@ -44,6 +44,7 @@
         .dib.ml2(v-show="allowNext && !isTakingPhoto")
           button.white.bw0.br2.f4.cover__major-next.h-100(
             :class="majorActionClass"
+            v-show="isTakingCover"
             @click="nextStep"
           ) {{nextStepText}}
       .cover__minor-action.flex.f6
@@ -295,10 +296,7 @@ export default {
         this.isTakingPhoto = true
         this.isTakingCover = false
       } else {
-        const sureImGoingToUpload = confirm('所有資料都準備好了嗎？上傳後就無法再更改囉\nԅ⁞ ◑ ₒ ◑ ⁞ᓄ')
-        if (sureImGoingToUpload) {
-          this.$router.push('/create-item/done')
-        }
+        this.$router.push('/create-item/done')
       }
     }
   }
