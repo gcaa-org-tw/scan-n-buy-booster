@@ -181,7 +181,6 @@ export default {
     async getCompany () {
       this.isLoading = true
       this.isExisted = await this.getCacheCompany()
-      this.isExisted = false
       if (this.isExisted) {
         this.isLoading = false
         return
