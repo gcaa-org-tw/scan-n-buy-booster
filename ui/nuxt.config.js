@@ -25,7 +25,8 @@ export default {
   */
   css: [
     'tachyons/css/tachyons.css',
-    '@fortawesome/fontawesome-free/css/all.css'
+    '@fortawesome/fontawesome-free/css/all.css',
+    'c3/c3.css'
   ],
   /*
   ** Plugins to load before mounting the App

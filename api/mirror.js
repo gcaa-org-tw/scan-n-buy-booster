@@ -3,12 +3,12 @@ const qs = require('querystring')
 const pgp = require('pg-promise')()
 const Sentry = require('@sentry/node')
 
+const BASE_EMAIL = '**it_would_never_be_a_valid_email**'
+
 const db = pgp({
   connectionString: process.env.DATABASE_URL,
   ssl: true
 })
-
-console.log(process.env.DATABASE_URL)
 
 db.connect()
 
@@ -25,6 +25,15 @@ async function counter (req, res) {
   res.json({
     success: true,
     counter: Number(sum)
+  })
+}
+
+async function stats (req, res) {
+  const query = 'select counter, count(*) as n from mirror where email != $1 group by counter order by counter;'
+  const rows = await db.any(query, [BASE_EMAIL])
+  res.json({
+    success: true,
+    stats: rows
   })
 }
 
@@ -85,5 +94,6 @@ async function backup (data) {
 
 module.exports = {
   ping,
-  counter
+  counter,
+  stats
 }

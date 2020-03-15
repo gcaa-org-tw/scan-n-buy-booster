@@ -63,6 +63,8 @@ app.post('/mirror/ping', checkJwt, mirrorHandler.ping)
 
 app.get('/mirror/counter', mirrorHandler.counter)
 
+app.get('/mirror/stats', mirrorHandler.stats)
+
 app.use(function (err, req, res, next) {
   console.error(err.stack)
   return res.status(err.status).json({ message: err.message })
