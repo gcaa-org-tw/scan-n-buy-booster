@@ -48,12 +48,13 @@ function genInitState () {
     }
   })
   // no need to reset total item
-  ret.totalItems = 0
   return ret
 }
 
 export const state = () => {
-  return genInitState()
+  const ret = genInitState()
+  ret.totalItems = 0
+  return ret
 }
 
 export const mutations = {
