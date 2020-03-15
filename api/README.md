@@ -12,6 +12,8 @@
 
 ## Dev Howto
 
+See `db-init.sql` for DB schema.
+
 ```bash
 npm install
 npm run dev
