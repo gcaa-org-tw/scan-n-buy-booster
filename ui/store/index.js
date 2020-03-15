@@ -30,6 +30,14 @@ const DEFAULT_STATE = {
   }
 }
 
+// DEFAULT_STATE.barcode = '12346'
+// DEFAULT_STATE.companyInfo = { id: '123', name: 'com name' }
+// DEFAULT_STATE.itemName = 'item name'
+// DEFAULT_STATE.mainCat = '其他'
+// DEFAULT_STATE.coverImage = 'cc'
+// DEFAULT_STATE.detailImage = 'dd'
+// DEFAULT_STATE.forceManual = true
+
 function genInitState () {
   const ret = {}
   Object.keys(DEFAULT_STATE).forEach((key) => {

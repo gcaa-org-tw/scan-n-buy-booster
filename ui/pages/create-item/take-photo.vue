@@ -12,10 +12,12 @@
         autoplay="true"
         :class="{'o-50': isShowingResult, 'o-100': !isShowingResult }"
       )
-      .cover__video.w-100.h-100.o-50.bg-light-gray.flex.items-center.justify-center.f4(v-else)
+      .cover__video.absolute.z-5.w-100.h-100.o-50.bg-light-gray.flex.flex-wrap.items-center.justify-center.f4(v-else)
         | 請點旁邊的
         i.fas.fa-camera-retro.mh2
-        | 開始拍照
+        | 開始拍照或
+        button.bg-light-yellow.black.ml2.ba.b--black.pointer.br2.pv2.ph3.f5(@click="enableBrowserCamera")
+          | 點此尋找相機
       .cover__result.absolute.top-0.left-0.w-100.h-100.contain.bg-center.bg-white(
         :style="photoStyle"
         :class="{'o-0': !isShowingResult, 'o-100': isShowingResult }"
@@ -194,23 +196,32 @@ export default {
       // use <input capture> when browser doesn't support camera
       return
     }
-    this.camera = new CameraPhoto(this.$refs.camera)
-    try {
-      await this.camera.startCamera(FACING_MODES.ENVIRONMENT, {
-        // expected photo resolution
-        width: 1280
-      })
-    } catch (err) {
-      if (err.name === 'NotFoundException') {
-        // cancel scan, noop
-      } else if (err.name === 'NotAllowedError') {
-        alert('我沒辦法打開相機，請聯絡工作人員\n⊙﹏⊙')
-      } else {
-        console.error(err)
-      }
-    }
+    await this.initCamera()
   },
   methods: {
+    enableBrowserCamera () {
+      this.$store.commit(MUTATIONS.SET_MANUAL_MODE, false)
+      this.$nextTick(() => {
+        this.initCamera()
+      })
+    },
+    async initCamera () {
+      this.camera = new CameraPhoto(this.$refs.camera)
+      try {
+        await this.camera.startCamera(FACING_MODES.ENVIRONMENT, {
+          // expected photo resolution
+          width: 1280
+        })
+      } catch (err) {
+        if (err.name === 'NotFoundException' || err.name === 'NotAllowedError') {
+          // cancel scan, noop
+          this.$store.commit(MUTATIONS.SET_MANUAL_MODE, true)
+          alert('我沒辦法打開相機，使用手動模式\n⊙﹏⊙')
+        } else {
+          console.error(err)
+        }
+      }
+    },
     getNativePhoto (event) {
       const photo = event.target.files[0]
       if (!photo || !photo.type.match('image.*')) {

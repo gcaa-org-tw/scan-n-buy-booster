@@ -5,15 +5,7 @@
       h1.f3.mv0 掃描產品條碼
     div(v-if="cameras.length || !hasNoCamera")
       button.ba.br2.b--silver.pv2.ph3.mb2.w-100.silver.bg-white(@click="toggleForceManual") {{manualSwitcherText}}
-      div(v-if="noDefaultCamera")
-        .mb3.lh-copy
-          | 請幫我選一個鏡頭
-          .gray 別擔心，之後可以隨時更改
-        select(
-          v-model="targetCameraId"
-        )
-          option(v-for="camera in cameras" :value="camera.id") {{camera.label}}
-      div(v-else)
+      div
         video.bg-moon-gray.w-100(ref="barcodeVideo" :class="{disabled: barcode}")
         .pa2.mv2.bb.b--green.w-100.flex
           .scan__code-label 條碼：
@@ -73,7 +65,6 @@ export default {
       codeReader: new BrowserBarcodeReader(),
       cameras: [],
       targetCameraId: null,
-      noDefaultCamera: false,
       hasNoCamera: false,
       isOnScan: false,
       isManual: false,
@@ -100,7 +91,6 @@ export default {
   },
   watch: {
     targetCameraId (newId) {
-      this.noDefaultCamera = false
       localStorage.setItem(DEFAULT_CAMERA_KEY, newId)
       this.startScanOnce()
     },
@@ -110,7 +100,6 @@ export default {
   },
   async created () {
     this.$store.commit(MUTATIONS.RESET_ITEM)
-    // TODO: if no camera? handle permission
     const videoInputDevices = await this.codeReader.getVideoInputDevices()
     this.cameras = videoInputDevices.map((dev) => {
       return {
@@ -152,7 +141,9 @@ export default {
       this.isManual = true
       this.codeReader.reset()
       this.$nextTick(() => {
-        this.$refs.input.focus()
+        if (this.$refs.input) {
+          this.$refs.input.focus()
+        }
       })
     },
     toggleForceManual () {

@@ -143,6 +143,7 @@ export default {
       } catch (err) {
         console.error('error when backup', err)
       }
+      this.$store.commit(MUTATIONS.RESET_ITEM)
       this.isUploading = false
       return true
     }
