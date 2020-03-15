@@ -12,7 +12,7 @@
         autoplay="true"
         :class="{'o-50': isShowingResult, 'o-100': !isShowingResult }"
       )
-      .cover__video.absolute.z-5.w-100.h-100.o-50.bg-light-gray.flex.flex-wrap.items-center.justify-center.f4(v-else)
+      .cover__video.absolute.z-1.w-100.h-100.o-50.bg-light-gray.flex.flex-wrap.items-center.justify-center.f4(v-else)
         | 請點旁邊的
         i.fas.fa-camera-retro.mh2
         | 開始拍照或
@@ -20,7 +20,7 @@
           | 點此尋找相機
       .cover__result.absolute.top-0.left-0.w-100.h-100.contain.bg-center.bg-white(
         :style="photoStyle"
-        :class="{'o-0': !isShowingResult, 'o-100': isShowingResult }"
+        :class="{'o-0': !isShowingResult, 'o-100': isShowingResult, 'z-2': isShowingResult }"
       )
         .flex.items-center.justify-center.white.bg-black.o-30.f3.h-100(v-show="isShowingSample")
           | 範例圖片
