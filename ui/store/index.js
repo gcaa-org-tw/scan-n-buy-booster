@@ -24,7 +24,6 @@ const DEFAULT_STATE = {
   subCat: '',
   coverImage: '',
   detailImage: '',
-  totalItems: 0,
   forceManual: () => {
     return localStorage.getItem(FORCE_MANUAL_KEY) === 'true'
   }
@@ -48,6 +47,8 @@ function genInitState () {
       ret[key] = val()
     }
   })
+  // no need to reset total item
+  ret.totalItems = 0
   return ret
 }
 
