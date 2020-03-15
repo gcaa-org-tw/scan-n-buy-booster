@@ -56,7 +56,7 @@ async function ping (req, res) {
     }
     const sumResult = await db.any('SELECT sum(counter) from mirror;')
     if (sumResult.length) {
-      sum = sumResult[0].sum
+      sum = Number(sumResult[0].sum)
     }
   } catch (err) {
     Sentry.captureException(err)
