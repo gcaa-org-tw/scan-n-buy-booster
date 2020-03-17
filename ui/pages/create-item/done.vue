@@ -1,33 +1,37 @@
 <template lang="pug">
-  .done.pa3.min-vh-100.flex.items-center.justify-center
-    .tc(v-if="isUploading")
-      | 上傳中
-      i.fas.fa-spinner.fa-pulse.ml3
-    .tc(v-else)
-      div.lh-copy(v-if="isSucceeded")
-        h1.mv2.green.f2 上傳完成
-        .f5 (ﾉ´▽｀)ﾉ♪
-        .f5 產品紀錄量來到
-        .f2.white.mv2.b.bg-yellow.dib.ph3 {{totalItems.toLocaleString()}}
-        .f5 筆囉！
-      div(v-else)
-        h1.lh-copy 上傳失敗
-        .f4 ヽ(￣д￣;)ノ
-      step-button.mt4(
-        :primary="true"
-        to="/create-item/scan"
-      ) 再來一筆
+  .done.min-vh-100.flex.flex-column.justify-between
+    .flex.items-center.justify-center.pa3.flex-auto
+      .tc(v-if="isUploading")
+        | 上傳中
+        i.fas.fa-spinner.fa-pulse.ml3
+      .tc(v-else)
+        div.lh-copy(v-if="isSucceeded")
+          h1.mv2.green.f2 上傳完成
+          .f5 (ﾉ´▽｀)ﾉ♪
+          .f5 產品紀錄量來到
+          .f2.white.mv2.b.bg-yellow.dib.ph3 {{totalItems.toLocaleString()}}
+          .f5 筆囉！
+        div(v-else)
+          h1.lh-copy 上傳失敗
+          .f4 ヽ(￣д￣;)ノ
+        step-button.mt4(
+          :primary="true"
+          to="/create-item/scan"
+        ) 再來一筆
+    auth0-badge
 </template>
 <script>
 import { mapState } from 'vuex'
 import { postCreation } from '~/utils/mixins'
 import StepButton from '~/components/StepButton'
+import Auth0Badge from '~/components/Auth0Badge'
 import { postComEndpoint } from '~/utils/api'
 import { MUTATIONS } from '~/store'
 
 export default {
   components: {
-    StepButton
+    StepButton,
+    Auth0Badge
   },
   mixins: [postCreation],
   data () {
