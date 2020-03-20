@@ -119,7 +119,7 @@ export default {
       try {
         resp = await getComEndpoint(`/grocery/${barcode}`)
       } catch (err) {
-        alert('無法取得公司資訊，請重新掃描條碼')
+        // alert('無法取得公司資訊，請重新掃描條碼')
         console.error(err)
         return false
       }
@@ -148,8 +148,8 @@ export default {
           }
         })
       } catch (err) {
-        alert('無法取得公司資訊，請重新掃描條碼')
-        this.$router.push('/create-item/scan')
+        // alert('無法取得公司資訊，請重新掃描條碼')
+        // this.$router.push('/create-item/scan')
         console.error(err)
         return false
       }
@@ -160,18 +160,18 @@ export default {
       const corpId = data.corp_id
       const corpName = data.corp_name
 
-      if (!corpName) {
-        return false
-      }
-
       this.id = corpId
       this.name = corpName
-      this.$store.commit(MUTATIONS.SET_COMPANY, {
-        id: corpId,
-        name: corpName
-      })
 
-      return true
+      if (corpName) {
+        this.$store.commit(MUTATIONS.SET_COMPANY, {
+          id: corpId,
+          name: corpName
+        })
+      }
+
+      // only skip this item if we have product_name
+      return !!data.product_name
     },
     async getCompany () {
       this.isLoading = true
@@ -180,10 +180,12 @@ export default {
         this.isLoading = false
         return
       }
-      await this.crawlCompany()
+      if (!this.id || !this.name) {
+        await this.crawlCompany()
+      }
 
       this.hasName = !!this.name
-      if (!this.name) {
+      if (!this.name && this.barcode) {
         alert('網路上找不到公司資訊\n請幫我手動輸入～\n＼(◎o◎)／！')
       }
 
