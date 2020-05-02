@@ -109,7 +109,8 @@ export default {
         category: state.mainCat,
         product_name: state.itemName
       }
-      if (state.companyInfo.id) {
+      if (state.companyInfo.id && !state.companyInfo.origName) {
+        // only set corp_id when there's no alternative name
         textData.corp_id = state.companyInfo.id
       }
       if (state.subCat) {
