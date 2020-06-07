@@ -37,6 +37,23 @@ async function stats (req, res) {
   })
 }
 
+async function adminStats (req, res) {
+  if (!req.query.token || req.query.token !== process.env.ADMIN_TOKEN) {
+    console.log(req.query.token, process.env.ADMIN_TOKEN)
+    res.status(403).send('Invalid Access :)')
+    return
+  }
+  const query = 'select email, counter from mirror where email != $1 order by email;'
+  const rows = await db.any(query, [BASE_EMAIL])
+  res.json({
+    success: true,
+    stats: rows.map(row => ({
+      counter: row.counter,
+      email: row.email.trim()
+    }))
+  })
+}
+
 async function ping (req, res) {
   const data = req.body
   if (data.barcode && data.origName && data.id && data.name) {
@@ -95,5 +112,6 @@ async function backup (data) {
 module.exports = {
   ping,
   counter,
-  stats
+  stats,
+  adminStats
 }

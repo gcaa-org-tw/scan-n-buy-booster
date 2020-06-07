@@ -9,6 +9,7 @@
   - `BACKUP_ENDPOINT`: backup endpoint for multiple company support
 - Optional:
   - `SENTRY_DSN`: Sentry DSN
+  - `ADMIN_TOKEN`: To enable token
 
 ## Dev Howto
 

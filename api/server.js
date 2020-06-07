@@ -29,17 +29,10 @@ if (requiredEnv.some(key => !process.env[key])) {
   throw new Error('Make sure you have all required variable in your .env file')
 }
 
-const allowedOrigins = process.env.CLIENT_ORIGIN.split(',')
-function originChecker (origin, callback) {
-  if (allowedOrigins.includes(origin)) {
-    callback(null, true)
-  } else {
-    callback(new Error('Invalid origin'))
-  }
-}
+const allowedOrigins = process.env.CLIENT_ORIGIN.split(',').map(origin => origin.trim())
 
 const corsOptions = {
-  origin: originChecker
+  origin: allowedOrigins
 }
 
 app.use(cors(corsOptions))
@@ -73,6 +66,8 @@ app.post('/mirror/ping', checkJwt, mirrorHandler.ping)
 app.get('/mirror/counter', mirrorHandler.counter)
 
 app.get('/mirror/stats', mirrorHandler.stats)
+
+app.get('/mirror/admin-stats', mirrorHandler.adminStats)
 
 app.use(function (err, req, res, next) {
   console.error(err.stack)

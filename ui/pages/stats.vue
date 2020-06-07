@@ -16,6 +16,7 @@
 <script>
 import c3 from 'c3'
 import { getComEndpoint } from '~/utils/api'
+
 export default {
   data () {
     return {

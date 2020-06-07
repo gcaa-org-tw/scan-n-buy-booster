@@ -68,6 +68,8 @@ export const useAuth0 = ({
           this.isAuthenticated = isAuthenticated
           this.user = await this.auth0Client.getUser()
           this.token = (await this.auth0Client.getIdTokenClaims()).__raw
+          this.adminToken = this.user[process.env.ADMIN_TOKEN_KEY]
+          this.isAdmin = !!this.adminToken
 
           setComAuth(this.token)
         }

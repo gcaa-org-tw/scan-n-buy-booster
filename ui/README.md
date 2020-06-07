@@ -10,6 +10,7 @@
 - Optional:
   - `SENTRY_DSN`: Sentry DSN
   - `GA_ID`: Google analytics ID
+  - `ADMIN_TOKEN_KEY`, key for admin related page token
 
 ## Build Setup
 
