@@ -29,8 +29,17 @@ if (requiredEnv.some(key => !process.env[key])) {
   throw new Error('Make sure you have all required variable in your .env file')
 }
 
+const allowedOrigins = process.env.CLIENT_ORIGIN.split(',')
+function originChecker (origin, callback) {
+  if (allowedOrigins.includes(origin)) {
+    callback(null, true)
+  } else {
+    callback(new Error('Invalid origin'))
+  }
+}
+
 const corsOptions = {
-  origin: process.env.CLIENT_ORIGIN
+  origin: originChecker
 }
 
 app.use(cors(corsOptions))
